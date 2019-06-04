@@ -20,6 +20,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     var results : [JSON] = []
     
+    var userLocation : CLLocation?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
       
@@ -37,6 +39,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         let location = locations.first
         let center = location!.coordinate
+        userLocation = location
         let span = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
         let region = MKCoordinateRegion(center: center, span: span)
         mapView.setRegion(region, animated: true)
@@ -88,6 +91,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let tvc = segue.destination as! StationsTableViewController
         tvc.results = results
+        tvc.userLocation = userLocation
         
     }
 
