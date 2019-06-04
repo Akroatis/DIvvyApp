@@ -81,6 +81,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             self.loadError()
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //let TVC = segue.destination as! StationsTableViewController
+        
+    }
 
 }
 
