@@ -16,6 +16,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     @IBOutlet weak var mapView: MKMapView!
     
+    let apiAddress = "https://feeds.divvybikes.com/stations/stations.json"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
       
@@ -24,6 +26,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
+        
+        query()
         
     }
 
@@ -37,6 +41,46 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
     }
     
+    func parse (json: JSON){
+        for result in json["stationBeanList"].arrayValue{
+            let name = result["stationName"].stringValue
+            let availableBikes = result["availableBikes"]
+            let lat = result["latitude"].doubleValue
+            let long = result["longitude"].doubleValue
+            let location = CLLocationCoordinate2D(latitude: lat, longitude: long)
+            let annotation = MKPointAnnotation()
+            annotation.title = name
+            annotation.subtitle = "Available Bikes: \(availableBikes)"
+            annotation.coordinate = location
+            mapView.addAnnotation(annotation)
+            
+        }
+    }
+    
+    func loadError(){
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: "Loading Error", message: "There was an issue loading bus stop data.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true)
+        }
+    }
+    
+    func query(){
+        let query = apiAddress
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            [unowned self] in
+            if let url = URL(string: query){
+                if let data = try? Data(contentsOf: url){
+                    let json = try! JSON(data: data)
+                    self.parse(json: json)
+                    return
+                }
+            }
+            self.loadError()
+        }
+    }
 
 }
 
