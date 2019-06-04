@@ -18,6 +18,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     let apiAddress = "https://feeds.divvybikes.com/stations/stations.json"
     
+    var results : [JSON] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
       
@@ -43,6 +45,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     func parse (json: JSON){
         for result in json["stationBeanList"].arrayValue{
+            results.append(result)
             let name = result["stationName"].stringValue
             let availableBikes = result["availableBikes"]
             let lat = result["latitude"].doubleValue
@@ -83,7 +86,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        //let TVC = segue.destination as! StationsTableViewController
+        let tvc = segue.destination as! StationsTableViewController
+        tvc.results = results
         
     }
 

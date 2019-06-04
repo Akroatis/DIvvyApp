@@ -26,24 +26,17 @@ class StationsTableViewController: UITableViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
-        query()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
         
-        tableView.reloadData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-        tableView.reloadData()
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numberOfStations
+        return results.count
     }
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellID")
@@ -53,43 +46,4 @@ class StationsTableViewController: UITableViewController {
         return cell!
     }
     
-    
-    
-    func parse(json : JSON){
-        numberOfStations = json["stationBeanList"].arrayValue.count
-        for result in json["stationBeanList"].arrayValue{
-            results.append(result)
-            let name = result["stationName"].stringValue
-            let availableBikes = result["availableBikes"].intValue
-            let lat = result["latitude"].doubleValue
-            let long = result["longitude"].doubleValue
-            let location = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        }
-        
-    }
-    
-    func query(){
-        let query = apiAddress
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            [unowned self] in
-            if let url = URL(string: query){
-                if let data = try? Data(contentsOf: url){
-                    let json = try! JSON(data: data)
-                    self.parse(json: json)
-                    return
-                }
-            }
-            self.loadError()
-        }
-    }
-    
-    func loadError(){
-        DispatchQueue.main.async {
-            let alertController = UIAlertController(title: "Loading Error", message: "There was an issue loading bus stop data.", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(okAction)
-            self.present(alertController, animated: true)
-        }
-    }
 }
