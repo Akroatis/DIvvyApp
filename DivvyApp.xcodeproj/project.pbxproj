@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D543266E22A6F3F30050D0DF /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D543266D22A6F3F30050D0DF /* SwiftyJSON.swift */; };
+		D543267022A6FEDC0050D0DF /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D543266F22A6FEDC0050D0DF /* DetailViewController.swift */; };
+		D543267222A6FFB20050D0DF /* StationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D543267122A6FFB20050D0DF /* StationsTableViewController.swift */; };
 		E0BBA1F022A6EC56005C2918 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BBA1EF22A6EC56005C2918 /* AppDelegate.swift */; };
 		E0BBA1F222A6EC56005C2918 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BBA1F122A6EC56005C2918 /* ViewController.swift */; };
 		E0BBA1F522A6EC56005C2918 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0BBA1F322A6EC56005C2918 /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 
 /* Begin PBXFileReference section */
 		D543266D22A6F3F30050D0DF /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		D543266F22A6FEDC0050D0DF /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		D543267122A6FFB20050D0DF /* StationsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsTableViewController.swift; sourceTree = "<group>"; };
 		E0BBA1EC22A6EC56005C2918 /* DivvyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DivvyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0BBA1EF22A6EC56005C2918 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E0BBA1F122A6EC56005C2918 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -59,6 +63,8 @@
 				E0BBA1EF22A6EC56005C2918 /* AppDelegate.swift */,
 				E0BBA1F122A6EC56005C2918 /* ViewController.swift */,
 				E0BBA1F322A6EC56005C2918 /* Main.storyboard */,
+				D543267122A6FFB20050D0DF /* StationsTableViewController.swift */,
+				D543266F22A6FEDC0050D0DF /* DetailViewController.swift */,
 				E0BBA1F622A6EC5B005C2918 /* Assets.xcassets */,
 				E0BBA1F822A6EC5B005C2918 /* LaunchScreen.storyboard */,
 				E0BBA1FB22A6EC5B005C2918 /* Info.plist */,
@@ -139,8 +145,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D543266E22A6F3F30050D0DF /* SwiftyJSON.swift in Sources */,
+				D543267222A6FFB20050D0DF /* StationsTableViewController.swift in Sources */,
 				E0BBA1F222A6EC56005C2918 /* ViewController.swift in Sources */,
 				E0BBA1F022A6EC56005C2918 /* AppDelegate.swift in Sources */,
+				D543267022A6FEDC0050D0DF /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
