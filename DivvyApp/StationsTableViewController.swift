@@ -8,16 +8,17 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
 class StationsTableViewController: UITableViewController {
     
     let apiAddress = "https://feeds.divvybikes.com/stations/stations.json"
     var numberOfStations = 0
-    var userLocation : CLLocation?
+    var userLocation : CLLocationCoordinate2D?
     
-//    var names : [String] = []
-//    var location : [CLLocationCoordinate2D] = []
-//    var bikes : [Int] = []
+    //    var names : [String] = []
+    //    var location : [CLLocationCoordinate2D] = []
+    //    var bikes : [Int] = []
     
     var results : [JSON] = []
     
@@ -44,13 +45,43 @@ class StationsTableViewController: UITableViewController {
         let result = results[indexPath.row]
         let lat = result["latitude"].doubleValue
         let long = result["longitude"].doubleValue
-        let location = CLLocation(latitude: lat, longitude: long)
-        let distance = (userLocation?.distance(from: location))! / 1609.34
-        print (distance)
+        let location = CLLocationCoordinate2D(latitude: lat, longitude: long)
+        //this distance only reads as the crow flies
+        
+        //        let userCLLocation = CLLocation(latitude: userLocation!.latitude, longitude: userLocation!.longitude)
+        //        let selectedCLLocation = CLLocation(latitude: lat, longitude: long)
+        //
+        //        let distance = userCLLocation.distance(from: selectedCLLocation)
+        
+        
+        
         cell?.textLabel!.text = result["stationName"].stringValue
-        cell?.detailTextLabel!.text = "Available Bikes: \(result["availableBikes"].intValue)\nDistance: \(distance) miles"
+        
+        let bikeString = "Available Bikes: \(result["availableBikes"].intValue)"
+
+        self.getDrivingDistance(start: self.userLocation!, end: location, cell: cell!, bikeString: bikeString)
+        
         print ("cell returned")
         return cell!
     }
     
+    func getDrivingDistance(start : CLLocationCoordinate2D, end : CLLocationCoordinate2D, cell : UITableViewCell, bikeString: String){
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: start))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: end))
+        request.transportType = .automobile
+        
+        let directions = MKDirections(request: request)
+        
+        var routeString = ""
+        
+        directions.calculate { (response, error) in
+            if let response = response, let route = response.routes.first {
+                print(route.distance)
+                    routeString = "\(route.distance / 1609.34)"
+                cell.detailTextLabel?.text = ("\(bikeString)\n\(routeString) miles")
+            }
+        }
+        //return routeString
+    }
 }

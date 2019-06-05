@@ -20,7 +20,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     var results : [JSON] = []
     
-    var userLocation : CLLocation?
+    var userLocation : CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +39,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         let location = locations.first
         let center = location!.coordinate
-        userLocation = location
+        userLocation = location?.coordinate
         let span = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
         let region = MKCoordinateRegion(center: center, span: span)
         mapView.setRegion(region, animated: true)
