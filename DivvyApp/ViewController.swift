@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 
 class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
-
+    
     let locationManager = CLLocationManager()
     
     @IBOutlet weak var mapView: MKMapView!
@@ -21,10 +21,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     var results : [JSON] = []
     
     var userLocation : CLLocationCoordinate2D?
+    var selectedLocation : CLLocationCoordinate2D?
+    var selectedResult : JSON?
+    var formattedRouteString = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+        
         locationManager.delegate = self
         mapView.delegate = self
         
@@ -34,7 +37,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         query()
         
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        formattedRouteString = ""
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let location = locations.first
@@ -60,6 +67,21 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             annotation.coordinate = location
             mapView.addAnnotation(annotation)
             
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        let annotation = view.annotation
+        self.selectedLocation = annotation?.coordinate
+        for result in self.results {
+            if result["stationName"].stringValue == annotation?.title{
+                self.selectedResult = result
+                self.getDrivingDistance(start: self.userLocation!, end: self.selectedLocation!)
+                
+            }
+        }
+        DispatchQueue.main.async {
+            self.segueCheck()
         }
     }
     
@@ -89,11 +111,49 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let tvc = segue.destination as! StationsTableViewController
-        tvc.results = results
-        tvc.userLocation = userLocation
+        if segue.identifier == "segueToDetailVCFromMap"{
+            let DVC = segue.destination as! DetailViewController
+            DVC.userLocation = userLocation
+            DVC.selectedResult = selectedResult
+            let bikes = selectedResult!["availableBikes"]
+            formattedRouteString = "Available Bikes: \(bikes)\nDistance: \(formattedRouteString)"
+            DVC.distanceString = formattedRouteString
+        } else{
+            let tvc = segue.destination as! StationsTableViewController
+            tvc.results = results
+            tvc.userLocation = userLocation
+        }
         
     }
-
+    
+    func getDrivingDistance(start : CLLocationCoordinate2D, end : CLLocationCoordinate2D){
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: start))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: end))
+        request.transportType = .automobile
+        
+        let directions = MKDirections(request: request)
+        
+        directions.calculate { (response, error) in
+            if let response = response, let route = response.routes.first {
+                print(route.distance)
+                //converts from meters to miles
+                let routeDistance = route.distance / 1609.34
+                //formats the string to two decimals.
+                self.formattedRouteString = String(format: "%.02f" , routeDistance)
+            }
+        }
+    }
+    
+    func segueCheck() {
+        if formattedRouteString == "" {
+            DispatchQueue.main.async {
+                self.segueCheck()
+            }
+        } else{
+            self.performSegue(withIdentifier: "segueToDetailVCFromMap", sender: nil)
+        }
+    }
+    
 }
 

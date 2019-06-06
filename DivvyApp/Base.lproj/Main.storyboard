@@ -50,6 +50,9 @@
                             <outlet property="delegate" destination="cnl-9n-bNM" id="qjb-pt-hsa"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <segue destination="ADO-Ne-on5" kind="show" identifier="segueToDetailVC" id="M2I-hV-2SO"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Hz-Q1-B5V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -85,26 +88,63 @@
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="GX5-3H-jaq" id="fIB-jH-N1d"/>
+                        <segue destination="ADO-Ne-on5" kind="show" identifier="segueToDetailVCFromMap" id="X2A-Dh-vyh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="115.84821428571428"/>
         </scene>
-        <!--View Controller-->
+        <!--Detail View Controller-->
         <scene sceneID="OYs-kg-UYO">
             <objects>
-                <viewController id="ADO-Ne-on5" sceneMemberID="viewController">
+                <viewController id="ADO-Ne-on5" customClass="DetailViewController" customModule="DivvyApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JfJ-Qu-Moo">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="dHL-KR-Rdn">
+                                <rect key="frame" x="54" y="125" width="307" height="351"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </mapView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="jSE-Kn-r6b">
+                                <rect key="frame" x="10" y="603" width="394" height="139"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StationNameLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UT9-S3-qLe">
+                                        <rect key="frame" x="0.0" y="0.0" width="394" height="29"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StationNameLabel" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sm-uS-dn7">
+                                        <rect key="frame" x="0.0" y="59" width="394" height="80"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="80" id="voo-3S-U2m"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="fkc-d3-19H" firstAttribute="trailing" secondItem="jSE-Kn-r6b" secondAttribute="trailing" constant="10" id="UNi-WE-FJ4"/>
+                            <constraint firstItem="jSE-Kn-r6b" firstAttribute="leading" secondItem="fkc-d3-19H" secondAttribute="leading" constant="10" id="a9O-TS-nwj"/>
+                            <constraint firstItem="fkc-d3-19H" firstAttribute="bottom" secondItem="jSE-Kn-r6b" secondAttribute="bottom" constant="120" id="uft-iF-tdP"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="fkc-d3-19H"/>
                     </view>
+                    <connections>
+                        <outlet property="detailMapView" destination="dHL-KR-Rdn" id="R1T-RD-HV7"/>
+                        <outlet property="distanceLabel" destination="8sm-uS-dn7" id="Bba-8R-U05"/>
+                        <outlet property="stationNameLabel" destination="UT9-S3-qLe" id="ci7-Uw-0wJ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jsz-U6-BmO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1859" y="116"/>
+            <point key="canvasLocation" x="1857.9710144927537" y="115.84821428571428"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WRJ-7f-wGI">
@@ -125,4 +165,7 @@
             <point key="canvasLocation" x="167" y="116"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="X2A-Dh-vyh"/>
+    </inferredMetricsTieBreakers>
 </document>

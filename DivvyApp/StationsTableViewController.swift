@@ -15,12 +15,11 @@ class StationsTableViewController: UITableViewController {
     let apiAddress = "https://feeds.divvybikes.com/stations/stations.json"
     var numberOfStations = 0
     var userLocation : CLLocationCoordinate2D?
-    
-    //    var names : [String] = []
-    //    var location : [CLLocationCoordinate2D] = []
-    //    var bikes : [Int] = []
-    
+
+    //these will be passed to the detailVC
     var results : [JSON] = []
+    var selectedResult : JSON?
+    var formattedRouteString = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,21 +38,12 @@ class StationsTableViewController: UITableViewController {
         return results.count
     }
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellID")
         let result = results[indexPath.row]
         let lat = result["latitude"].doubleValue
         let long = result["longitude"].doubleValue
         let location = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        //this distance only reads as the crow flies
-        
-        //        let userCLLocation = CLLocation(latitude: userLocation!.latitude, longitude: userLocation!.longitude)
-        //        let selectedCLLocation = CLLocation(latitude: lat, longitude: long)
-        //
-        //        let distance = userCLLocation.distance(from: selectedCLLocation)
-        
-        
         
         cell?.textLabel!.text = result["stationName"].stringValue
         
@@ -61,7 +51,7 @@ class StationsTableViewController: UITableViewController {
 
         self.getDrivingDistance(start: self.userLocation!, end: location, cell: cell!, bikeString: bikeString)
         
-        print ("cell returned")
+        //print ("cell returned")
         return cell!
     }
     
@@ -73,15 +63,31 @@ class StationsTableViewController: UITableViewController {
         
         let directions = MKDirections(request: request)
         
-        var routeString = ""
-        
         directions.calculate { (response, error) in
             if let response = response, let route = response.routes.first {
                 print(route.distance)
-                    routeString = "\(route.distance / 1609.34)"
-                cell.detailTextLabel?.text = ("\(bikeString)\n\(routeString) miles")
+                //converts from meters to miles
+                let routeDistance = route.distance / 1609.34
+                //formats the string to two decimals.
+                self.formattedRouteString = String(format: "%.02f" , routeDistance)
+                cell.detailTextLabel?.text = ("\(bikeString)\n\(self.formattedRouteString) miles")
             }
         }
-        //return routeString
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedResult = results[indexPath.row]
+        let selectedCell = tableView.cellForRow(at: indexPath)
+        formattedRouteString = (selectedCell?.detailTextLabel!.text)!
+        performSegue(withIdentifier: "segueToDetailVC", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let DVC = segue.destination as! DetailViewController
+        DVC.selectedResult = selectedResult
+        DVC.userLocation = userLocation
+        DVC.distanceString = formattedRouteString
+
+    }
+    
 }
